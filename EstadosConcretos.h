@@ -8,8 +8,8 @@ class Principal_Estado: public EstadoAbstrato {
       Serial.print("MenuPrincDestruido");
     }
 
-    void update(AssuntoI *assunto) {}
-    void updateTela(AssuntoI *assunto) {}
+    void update(TimerInterface *assunto) {}
+    void updateTela(TimerInterface *assunto) {}
     
     void run() {
       if (!tela_atualizada) {

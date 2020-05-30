@@ -16,8 +16,6 @@ public:
   unsigned long atraso;
   int histerese;
   byte rele;
-  double temperatura = 0;
-  double temperatura_offset = 0;
   
   double setPoint;
   
@@ -28,6 +26,7 @@ public:
    this->proxima_execucao = millis() + _atraso;
    //Atribui o pino da saida de controle
    pinMode(this->rele, OUTPUT);
+   digitalWrite(this->rele, HIGH);
   }
 
 
@@ -60,11 +59,11 @@ public:
     bool habilitado = !((agora - this->proxima_execucao) & 0x80000000);
     if (habilitado) {
         if (error >= 0) {
-          liga = true;
+          liga = (acao_direta) ? true : false;
           digitalWrite(rele, LOW);
         }
         else if ((error+this->histerese) <= 0) {
-          liga = false;
+          liga = (acao_direta) ? false : true;
           digitalWrite(rele, HIGH);
         }
         //Insere atraso para reduzir chaveamento
@@ -86,5 +85,9 @@ public:
       process();
     }
   }
-  
+
+  private:
+    boolean acao_direta = true; //Define o modo de operação como direto ou inverso
+    double temperatura = 0;
+    double temperatura_offset = 0;
 };

@@ -72,7 +72,7 @@ class App: public AppAbstract, public TecladoDelegate {
           this->estado_atual = new ConfiguraFervura_Estado(this, &param[0]);
           break;
         case Fervura:
-          this->estado_atual = new Fervura_Estado(this, &param[0]);
+          this->estado_atual = new Fervura_Estado(this, &param[0], new PWM(Heat, frequencia));
           break;
         case Configuracao:
           this->estado_atual = new Configuracao_Estado(this, &param[0]);
@@ -87,4 +87,5 @@ class App: public AppAbstract, public TecladoDelegate {
 
   private:
     EstadoAbstrato *estado_atual;
+
 };

@@ -19,6 +19,7 @@ MAX6675 termopar (thermoCLK, thermoCS, thermoDO);
 
 /************** Controlador *************************/
 #include "OnOff.h";
+#include "PWM.h"
 /************** State Pattern ***********************/
 
 // Arquivos relacionados ao padrao de design de Estados

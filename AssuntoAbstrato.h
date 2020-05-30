@@ -1,4 +1,4 @@
-class AssuntoAbstrato: public AssuntoI{
+class AssuntoAbstrato: public TimerInterface {
   public:
       virtual void attach(ObserverAbstrato *observer);
       virtual void detach(ObserverAbstrato *observer);

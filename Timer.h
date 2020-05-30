@@ -1,13 +1,14 @@
-class Timer: public AssuntoAbstrato{
+class Timer: public AssuntoAbstrato {
 public:
   
-  
+  Alarme *alarme;
   long tempo_inicial = 0;
   long tempo_total = 0;
   long tempo_pausa = 0;
   
 
   Timer() {
+    this->alarme = new Alarme();
   }
 
   void attach(ObserverAbstrato *observer) {
@@ -36,6 +37,10 @@ public:
 //      this->observer[i]->update(this);
 //    }
       this->observer->updateTela(this);
+  }
+
+  Alarme *getAlarme() {
+    return this->alarme;
   }
   
   bool finalizou() {
@@ -92,7 +97,7 @@ public:
             this->notify();
         }
         //Notifica presenca de alarme
-        if (   checaAlarme( int(this->getElapsed()/1000/60) )   ) this->notify();
+        if (   this->alarme->checaAlarme( int(this->getElapsed()/1000/60) )   ) this->notify();
         
     } 
     if (watchdog && ((millis()-ultimo_pulso) > delay_pulso)) {
@@ -115,7 +120,7 @@ public:
   void stop() {
     iniciado = false;
     resetWatchDog();
-    limpaAlarme();
+    this->alarme->limpaAlarme();
   }
 
   void pausa() {

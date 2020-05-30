@@ -17,7 +17,7 @@ class Manual_Estado: public EstadoAbstrato {
     }
 
     //Caso receba notificacao como observer
-    void update(AssuntoI *assunto) {
+    void update(TimerInterface *assunto) {
       if (assunto->finalizou()) {     // Timer finalizado
         tela_atualizada = false;
         etapa = 100;
@@ -25,7 +25,7 @@ class Manual_Estado: public EstadoAbstrato {
     }
 
     //Caso receba notificacao de watchdog como observer
-    void updateTela(AssuntoI *assunto) {
+    void updateTela(TimerInterface *assunto) {
       if (executando) {
         tela_exec++;
         if (tela_request || (tela_exec>5)) { // Aguarda 5 pulsos do timer para mudar a tela ou pressionar enter

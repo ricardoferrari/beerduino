@@ -8,7 +8,7 @@ class Automatico_Estado: public EstadoAbstrato {
       _delegate = delegate;
     }
 
-    void update(AssuntoI *assunto) {
+    void update(TimerInterface *assunto) {
       if (assunto->finalizou()) {     // Timer finalizado
         rampa+=2;
         if (rampa>param[0]*2) {
@@ -25,7 +25,7 @@ class Automatico_Estado: public EstadoAbstrato {
     
     
     //Caso receba notificacao de watchdog como observer
-    void updateTela(AssuntoI *assunto) {
+    void updateTela(TimerInterface *assunto) {
       
       if ((etapa>=10) && (etapa<=12)) {
         tela_exec++;
@@ -238,8 +238,8 @@ class Configuracao_Estado: public EstadoAbstrato {
       param[0] = 0; //Num de pontos da rampa inicial
     }
 
-    void update(AssuntoI *assunto) {}
-    void updateTela(AssuntoI *assunto) { if (etapa == 101) etapa = 102; tela_atualizada=false;} // Aguarda 2s com a mensagem na tela
+    void update(TimerInterface *assunto) {}
+    void updateTela(TimerInterface *assunto) { if (etapa == 101) etapa = 102; tela_atualizada=false;} // Aguarda 2s com a mensagem na tela
     
     void run() {
       if (!tela_atualizada) {

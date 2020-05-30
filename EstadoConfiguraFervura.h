@@ -8,10 +8,10 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
 
 
     //Caso receba notificacao como observer
-    void update(AssuntoI *assunto) {};
+    void update(TimerInterface *assunto) {};
 
     //Caso receba notificacao de watchdog como observer
-    void updateTela(AssuntoI *assunto) {};
+    void updateTela(TimerInterface *assunto) {};
     
     void run() {
       if (!tela_atualizada) {
@@ -93,7 +93,7 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
             case 1: 
             {
                 param[1] = valor; //Qtd de lupulos
-                _delegate->timer->setQtdAlarme(param[1]);
+                _delegate->timer->getAlarme()->setQtdAlarme(param[1]);
                 //Prepara próxima tela
                 valorMax = param[0];
                 valor = floor(param[0]/2);
@@ -107,7 +107,7 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
             {
                 char buffer[16];
                 sprintf(buffer, "Add Lupulo %d",etapa-1);
-                _delegate->timer->addAlarme(valor,buffer);
+                _delegate->timer->getAlarme()->addAlarme(valor,buffer);
                 etapa = (param[1]>(etapa-1))? (etapa+1) : 10;
                 tela_atualizada = false;
             }
@@ -128,6 +128,6 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
     byte etapa = 0;
     byte valorMax = 100;
     byte valor = 60;
-    byte *param; //Num maximo de pontos da rampa
+    byte *param; //Parametros de processo
 };
 
