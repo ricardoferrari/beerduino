@@ -48,7 +48,13 @@ public:
   }
 
   long getElapsed(){
-    return (millis()-tempo_inicial);
+    unsigned long tempo_inicial_calc = 0;
+    if(pausado) {
+      tempo_inicial_calc = tempo_inicial+(millis()-tempo_pausa);
+    } else {
+      tempo_inicial_calc = tempo_inicial;
+    }
+    return (millis()-tempo_inicial_calc);
   }
 
   String getElapsedFormatado(){

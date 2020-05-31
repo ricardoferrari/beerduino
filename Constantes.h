@@ -4,7 +4,7 @@ const byte Heat = 10;
 const byte Buzz = 11;
 
 
-unsigned long atraso = 20000; //20s de atraso de processo
+unsigned long atraso = 5000; //20s de atraso de processo
 unsigned long frequencia = 100; //frequencia do PWM
 const int histerese = 1;
 

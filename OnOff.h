@@ -6,6 +6,7 @@ class OnOffInterface {
     virtual void inicializaControlador(byte _setpoint);
     virtual void finalizaControlador();
     virtual double getPV();
+    virtual void setSetPoint(byte _setpoint);
     virtual void setResfriamento();
     virtual void run();
 };
@@ -26,7 +27,6 @@ public:
    this->histerese = _histerese;
    this->rele = _rele;
    this->atraso = _atraso;
-   this->proxima_execucao = millis() + _atraso;
    //Atribui o pino da saida de controle
    pinMode(this->rele, OUTPUT);
    digitalWrite(this->rele, HIGH);
@@ -42,6 +42,7 @@ public:
     }
     
     void inicializaControlador(byte _setpoint) {
+      this->proxima_execucao = millis() + this->atraso;
       this->setSetPoint(_setpoint);
       this->ativa();
     }
@@ -72,8 +73,8 @@ public:
     temperatura = _temperatura;
   }
 
-  void setSetPoint(double _setPoint){
-    setPoint = _setPoint;
+  void setSetPoint(byte _setpoint){
+    setPoint = _setpoint;
   }
 
   double getError() {
@@ -90,11 +91,11 @@ public:
     if (habilitado) {
         if (error >= 0) {
           liga = (acao_direta) ? true : false;
-          digitalWrite(rele, LOW);
+          digitalWrite(rele, liga);
         }
         else if ((error+this->histerese) <= 0) {
           liga = (acao_direta) ? false : true;
-          digitalWrite(rele, HIGH);
+          digitalWrite(rele, liga);
         }
         //Insere atraso para reduzir chaveamento
         this->proxima_execucao = agora + this->atraso;

@@ -48,11 +48,11 @@ class Manual_Estado: public EstadoAbstrato {
       this->controlador->run();
 
       //Checa se o tempo deve ser contabilizado (temperatura com limiar de erro menor do que 5 celsius)
-//      if (this->controlador->mashRangeOK(5)) {
-//        _delegate->timer->pausa();
-//      } else {
-//        _delegate->timer->resume();
-//      }
+      if (this->controlador->mashRangeOK(5)) {
+        _delegate->timer->resume();
+      } else {
+        _delegate->timer->pausa();
+      }
       
       if (!tela_atualizada) {
           lcd.clear();
@@ -89,7 +89,7 @@ class Manual_Estado: public EstadoAbstrato {
               lcd.print(param[1]);
               /*** mostra saida rele *******/
               lcd.setCursor(13,1);
-              lcd.print((controlador->estadoControlador())?"ON":"OFF");
+              lcd.print((controlador->estadoControlador())?"OFF":"ON");
               break;
             case 21:
               lcd.setCursor(0,0);
@@ -116,7 +116,7 @@ class Manual_Estado: public EstadoAbstrato {
     void adiciona(int qtd) {
       if ((valor+qtd) <= valorMax) {
           valor+=qtd;
-          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; _delegate->controlador->setSetPoint(valor); }//Modifica a temperatura durante o processo
+          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; controlador->setSetPoint(valor); }//Modifica a temperatura durante o processo
           tela_atualizada = false;
           tela_exec = 0;
       }
@@ -125,7 +125,7 @@ class Manual_Estado: public EstadoAbstrato {
     void subtrai(int qtd) {
       if ((valor-qtd) >= 0) {
           valor-=qtd;
-          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; _delegate->controlador->setSetPoint(valor); } //Modifica a temperatura durante o processo
+          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; controlador->setSetPoint(valor); } //Modifica a temperatura durante o processo
           tela_atualizada = false;
           tela_exec = 0;
       }
