@@ -6,6 +6,8 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
       param = &_param[0];
     }
 
+    //Restauracao de energia
+    void initFromSnapshot(byte *_param) {}
 
     //Caso receba notificacao como observer
     void update(TimerInterface *assunto) {};
@@ -38,9 +40,7 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
             /****************************************/
             /************ Tempo lupulo ****************/
             /****************************************/
-            case 2:
-            case 3:
-            case 4:
+            case 2 ... 4:
               lcd.setCursor(0,0);
               char buffer[16];
               sprintf(buffer, "Add Lupulo %d",etapa-1);
@@ -129,5 +129,7 @@ class ConfiguraFervura_Estado: public EstadoAbstrato {
     byte valorMax = 100;
     byte valor = 60;
     byte *param; //Parametros de processo
+    AppAbstract *_delegate;
+    bool tela_atualizada = false;
 };
 

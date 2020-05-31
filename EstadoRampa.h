@@ -8,6 +8,9 @@ class Automatico_Estado: public EstadoAbstrato {
       _delegate = delegate;
     }
 
+    //Restauracao de energia
+    void initFromSnapshot(byte *_param) {}
+
     void update(TimerInterface *assunto) {
       if (assunto->finalizou()) {     // Timer finalizado
         rampa+=2;
@@ -223,6 +226,8 @@ class Automatico_Estado: public EstadoAbstrato {
     String tempo_decorrido;
     String tempo_restante;
     String tempo_pausado;
+    AppAbstract *_delegate;
+    bool tela_atualizada = false;
 };
 
 
@@ -237,6 +242,9 @@ class Configuracao_Estado: public EstadoAbstrato {
       _delegate = delegate;
       param[0] = 0; //Num de pontos da rampa inicial
     }
+
+    //Restauracao de energia
+    void initFromSnapshot(byte *_param) {}
 
     void update(TimerInterface *assunto) {}
     void updateTela(TimerInterface *assunto) { if (etapa == 101) etapa = 102; tela_atualizada=false;} // Aguarda 2s com a mensagem na tela
@@ -372,7 +380,9 @@ class Configuracao_Estado: public EstadoAbstrato {
     
   private:
     byte etapa = 0;
-    byte valorMax = 10;
+    byte valorMax = 5; //qtd máxima inicial de rampas
     byte valor = 0;
     byte *param; //Num maximo de pontos da rampa
+        AppAbstract *_delegate;
+    bool tela_atualizada = false;
 };

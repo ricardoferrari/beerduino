@@ -24,6 +24,8 @@ MAX6675 termopar (thermoCLK, thermoCS, thermoDO);
 
 // Arquivos relacionados ao padrao de design de Estados
 #include "AppAbstract.h";
+
+#include "Persistente.h";
 #include "EstadoAbstrato.h";
 
 #include "EstadosConcretos.h";
@@ -34,12 +36,16 @@ MAX6675 termopar (thermoCLK, thermoCS, thermoDO);
 
 #include "App.h";
 
-App app = App(new Principal_Estado(&app), new Timer(), new Teclado(&app), new OnOff(Heat, histerese, atraso));
+App app = App(new Principal_Estado(&app), new Timer(), new Teclado(&app));
+Persistente persistente = Persistente(&app);
 
 void setup() {
   Serial.begin(9600);
   lcd.begin(16,2);
   lcd.backlight();
+  //Adiciona o observer para captura do estado de persistencia
+  app.attach(&persistente);
+  persistente.triggerRestoration();
   app.setup();
 }
 

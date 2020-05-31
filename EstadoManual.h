@@ -12,8 +12,12 @@
  
 class Manual_Estado: public EstadoAbstrato {
   public:
-    Manual_Estado(AppAbstract *delegate) {
+    Manual_Estado(AppAbstract *delegate, RecuperavelDelegate *_delegateRecuperavel, OnOffInterface *_controlador) {
       _delegate = delegate;
+      controlador = _controlador;
+      
+      //Delegate esponsavel por atualizar o snapshot do estado no app
+      setDelegateRestauravel(_delegateRecuperavel);
     }
 
     //Caso receba notificacao como observer
@@ -40,6 +44,16 @@ class Manual_Estado: public EstadoAbstrato {
     }
     
     void run() {
+      //Executa a ação do controlador
+      this->controlador->run();
+
+      //Checa se o tempo deve ser contabilizado (temperatura com limiar de erro menor do que 5 celsius)
+//      if (this->controlador->mashRangeOK(5)) {
+//        _delegate->timer->pausa();
+//      } else {
+//        _delegate->timer->resume();
+//      }
+      
       if (!tela_atualizada) {
           lcd.clear();
 
@@ -69,13 +83,13 @@ class Manual_Estado: public EstadoAbstrato {
               lcd.print("EM EXECUCAO:    ");
               lcd.setCursor(0,1);
               lcd.print("PV:");
-              lcd.print(_delegate->controladorPV());
+              lcd.print(controlador->getPV());
               lcd.setCursor(6,1);
               lcd.print("SP:");
               lcd.print(param[1]);
               /*** mostra saida rele *******/
               lcd.setCursor(13,1);
-              lcd.print((_delegate->estadoControlador())?"ON":"OFF");
+              lcd.print((controlador->estadoControlador())?"ON":"OFF");
               break;
             case 21:
               lcd.setCursor(0,0);
@@ -130,7 +144,7 @@ class Manual_Estado: public EstadoAbstrato {
             break;
             case 1: {
                       param[0] = valor;
-                      valor = 43;
+                      valor = 66;
                       valorMax = 100;
                       etapa++;
                       tela_atualizada = false;
@@ -138,18 +152,10 @@ class Manual_Estado: public EstadoAbstrato {
             break;
             case 2: {
                       param[1] = valor;
-                      _delegate->timer->reseta();
-                      if (com_tempo) {
-                          _delegate->timer->setMinutoTotal(param[0]);
-                          _delegate->timer->start();
-                      } else {
-                        _delegate->timer->setWatchDog(1);
-                      }
-                      executando = true;
-                      //Inicializa o setpoint e ativa o controle
-                      _delegate->inicializaControlador(valor);
-                      etapa=20; // Pula para as telas de execução
-                      tela_atualizada = false;
+                      param[2] = com_tempo;
+                      this->iniciaExecucao(param);
+                      //Captura o estado atual para restaurar em caso de perda de energia
+                      this->takeSnapshot(Manual, param);
             break;
             }
             default:
@@ -161,8 +167,39 @@ class Manual_Estado: public EstadoAbstrato {
     }
 
     void cancel() {
-      _delegate->finalizaControlador();
+      controlador->finalizaControlador();
+      //Cancela a captura de estado para reinício após falha elétrica
+      this->unsetSnapshot();
       _delegate->gotoEstado(Principal);
+    }
+
+    //Restauracao de energia
+    void iniciaExecucao(byte *_param) {
+        //Copia valores para a instância do estado atual
+        param[0] = _param[0];
+        param[1] = _param[1];
+        param[2] = _param[2];
+        valor = _param[1];
+        valorMax = 100; //Atribui limite para seleção de temperatura durante a execução
+        com_tempo = (param[2]!=0);
+
+        //Inicializa o controle e a temporização
+        _delegate->timer->reseta();
+        if (com_tempo) {
+            _delegate->timer->setMinutoTotal(param[0]);
+            _delegate->timer->start();
+        } else {
+          _delegate->timer->setWatchDog(1);
+        }
+        executando = true;
+        //Inicializa o setpoint e ativa o controle
+        controlador->inicializaControlador(valor);
+        etapa=20; // Pula para as telas de execução
+        tela_atualizada = false;
+    }
+
+    void initFromSnapshot(byte *_param) {
+      iniciaExecucao(_param);
     }
     
   private:
@@ -172,9 +209,12 @@ class Manual_Estado: public EstadoAbstrato {
     bool com_tempo = false;
     byte valorMax = 1;
     byte valor = 0;
-    byte param[2];
+    byte param[3];
     String tempo_decorrido;
     String tempo_restante;
     bool executando = false;
+    AppAbstract *_delegate;
+    bool tela_atualizada = false;
+    OnOffInterface *controlador;
 };
 

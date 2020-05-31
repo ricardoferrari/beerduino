@@ -1,13 +1,16 @@
 /////////////////// Classe do controlador /////////////////
-class OnOffDelegate {
+class OnOffInterface {
   public:
     virtual boolean estadoControlador();
-    virtual void inicializaControlador(double _setpoint);
+    virtual boolean mashRangeOK(byte limiar);
+    virtual void inicializaControlador(byte _setpoint);
     virtual void finalizaControlador();
-    virtual double controladorPV();
+    virtual double getPV();
+    virtual void setResfriamento();
+    virtual void run();
 };
 
-class OnOff{
+class OnOff: public OnOffInterface{
 
 public:
   boolean liga = false;
@@ -29,6 +32,33 @@ public:
    digitalWrite(this->rele, HIGH);
   }
 
+  /********** Funcoes do Delegate do Controlador  *********************/
+    boolean estadoControlador() {
+      return this->estado();
+    }
+
+    boolean mashRangeOK(byte limiar) {
+      return (abs(getError()) < limiar);
+    }
+    
+    void inicializaControlador(byte _setpoint) {
+      this->setSetPoint(_setpoint);
+      this->ativa();
+    }
+
+    void finalizaControlador() {
+      this->desativa();
+    }
+
+    void setResfriamento() {
+      acao_direta = false;
+    }
+
+    double getPV() {
+      return temperatura;
+    }
+    /************************************************************/
+
 
   void ativa() {
     this->executando = true;
@@ -42,17 +72,17 @@ public:
     temperatura = _temperatura;
   }
 
-  double getPV() {
-    return temperatura;
-  }
-  
   void setSetPoint(double _setPoint){
     setPoint = _setPoint;
+  }
+
+  double getError() {
+    return this->temperatura - this->setPoint;
   }
   
   double process(){
     // Implementação
-    double error = this->temperatura - this->setPoint;
+    double error = getError();
 
     //Habilita caso o atraso de processo já tenha sido atingido
     unsigned long agora = millis();

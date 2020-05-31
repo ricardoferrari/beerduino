@@ -8,6 +8,10 @@ class Principal_Estado: public EstadoAbstrato {
       Serial.print("MenuPrincDestruido");
     }
 
+    //Restauracao de energia
+    void initFromSnapshot(byte *_param) {}
+
+    
     void update(TimerInterface *assunto) {}
     void updateTela(TimerInterface *assunto) {}
     
@@ -70,4 +74,6 @@ class Principal_Estado: public EstadoAbstrato {
   private:
     byte opcaoQtd = 4;
     byte opcao = 1;
+    AppAbstract *_delegate;
+    bool tela_atualizada = false;
 };

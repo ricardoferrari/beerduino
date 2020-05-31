@@ -16,6 +16,9 @@ class Fervura_Estado: public EstadoAbstrato {
       tela_atualizada = false;
     }
 
+    //Restauracao de energia
+    void initFromSnapshot(byte *_param) {}
+
     //Caso receba notificacao como observer
     void update(TimerInterface *timer) {
       if (timer->finalizou()) {     // Timer finalizado
@@ -187,6 +190,7 @@ class Fervura_Estado: public EstadoAbstrato {
       }
       tela_atualizada = false;
     }
+
     
   private:
     byte etapa = 20;
@@ -200,4 +204,6 @@ class Fervura_Estado: public EstadoAbstrato {
     bool executando = false;
     byte *param; //Num maximo de pontos da rampa
     PWMInterface *controlador;
+    AppAbstract *_delegate;
+    bool tela_atualizada = false;
 };

@@ -1,13 +1,12 @@
 /****************** Contexto do Estado  **************************************/
-class App: public AppAbstract, public TecladoDelegate {
+class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegate {
   public:
     byte param[21];
     
-    App (EstadoAbstrato *estado, Timer *timer, Teclado *teclado, OnOff *controlador) {
+    App (EstadoAbstrato *estado, Timer *timer, Teclado *teclado) {
       this->estado_atual = estado;
       this->timer = timer;
       this->teclado = teclado;
-      this->controlador = controlador;
     }
 
     
@@ -19,7 +18,6 @@ class App: public AppAbstract, public TecladoDelegate {
       this->estado_atual->run();
       this->teclado->run();
       this->timer->run();
-      this->controlador->run();
     }
 
     /********** Funcoes do Delegate do teclado  *********************/
@@ -39,23 +37,13 @@ class App: public AppAbstract, public TecladoDelegate {
       this->estado_atual->cancel();
     }
 
-    /********** Funcoes do Delegate do Controlador  *********************/
-    boolean estadoControlador() {
-      return this->controlador->estado();
+    /*********** Funcao de recuperacao **********************************/
+    void restoreState(Nome_estados estado, byte *param) {
+      this->gotoEstado(estado);
+      this->estado_atual->initFromSnapshot(param);
     }
 
-    void inicializaControlador(double _setpoint) {
-      this->controlador->setSetPoint(_setpoint);
-      this->controlador->ativa();
-    }
 
-    void finalizaControlador() {
-      this->controlador->desativa();
-    }
-
-    double controladorPV(){
-      return this->controlador->getPV();
-    }
 
     /********** State Design Pattern  *********************/
     void gotoEstado(Nome_estados nome) {
@@ -63,7 +51,7 @@ class App: public AppAbstract, public TecladoDelegate {
       delete this->estado_atual;
       switch(nome) {
         case Manual:
-          this->estado_atual = new Manual_Estado(this);
+          this->estado_atual = new Manual_Estado(this, this, new OnOff(Heat, histerese, atraso));
           break;
         case Automatico:
           this->estado_atual = new Automatico_Estado(this, &param[0]);

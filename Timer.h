@@ -124,13 +124,21 @@ public:
   }
 
   void pausa() {
-    tempo_pausa = millis();
-    pausado = true;
+    if (!pausado) {
+      tempo_pausa = millis();
+      pausado = true;
+    }
   }
 
   void resume() {
-    tempo_inicial += (millis()-tempo_pausa);
-    pausado = false;
+    if(pausado) {
+      tempo_inicial += (millis()-tempo_pausa);
+      pausado = false;
+    }
+  }
+
+  boolean isPaused() {
+    return this->pausado;
   }
   
   void reseta(){
