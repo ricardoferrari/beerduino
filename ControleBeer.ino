@@ -31,6 +31,7 @@ MAX6675 termopar (thermoCLK, thermoCS, thermoDO);
 #include "EstadosConcretos.h";
 #include "EstadoRampa.h";
 #include "EstadoManual.h";
+//#include "EstadoRefrigera.h";
 #include "EstadoFervura.h";
 #include "EstadoConfiguraFervura.h";
 

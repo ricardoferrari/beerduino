@@ -7,7 +7,7 @@ class OnOffInterface {
     virtual void finalizaControlador();
     virtual double getPV();
     virtual void setSetPoint(byte _setpoint);
-    virtual void setResfriamento();
+    virtual void setResfriamento(boolean yes);
     virtual void run();
 };
 
@@ -51,8 +51,8 @@ public:
       this->desativa();
     }
 
-    void setResfriamento() {
-      acao_direta = false;
+    void setResfriamento(boolean yes) {
+      acao_direta = !yes;
     }
 
     double getPV() {

@@ -53,6 +53,10 @@ class Persistente: public PersistenteObserver {
     void triggerRestoration() {
       if (this->isSecured()) {
         this->recupera();
+        Serial.print("Etapa: ");
+        Serial.println(this->etapa);
+        Serial.print("P0: ");
+        Serial.println(this->param[0]);
         this->delegate->restoreState(this->etapa, &this->param[0]);
       }      
     }

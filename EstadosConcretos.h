@@ -33,6 +33,10 @@ class Principal_Estado: public EstadoAbstrato {
                 lcd.setCursor(0,1);
                 lcd.print("    FERVURA     ");
                 break;
+            case 4 :
+                lcd.setCursor(0,1);
+                lcd.print("   REFRIGERA    ");
+                break;
             default:
                 lcd.setCursor(0,1);
                 lcd.print("  CONFIGURACAO  ");
@@ -64,6 +68,8 @@ class Principal_Estado: public EstadoAbstrato {
         break;
         case 3:_delegate->gotoEstado(ConfiguraFervura);
         break;
+        case 4:_delegate->gotoEstado(Refrigeracao);
+        break;
         default: _delegate->gotoEstado(Configuracao);
         break;
       }
@@ -72,7 +78,7 @@ class Principal_Estado: public EstadoAbstrato {
     void cancel() {}
     
   private:
-    byte opcaoQtd = 4;
+    byte opcaoQtd = 5;
     byte opcao = 1;
     AppAbstract *_delegate;
     bool tela_atualizada = false;

@@ -54,8 +54,6 @@ public:
     } else if (iniciado || watchdog){
       tempo_calc = millis()-tempo_inicial;
     }
-    Serial.print("Tempo decorrido (timer): ");
-    Serial.println(tempo_calc);
     return tempo_calc;
   }
 

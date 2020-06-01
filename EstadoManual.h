@@ -194,6 +194,7 @@ class Manual_Estado: public EstadoAbstrato {
         }
         executando = true;
         //Inicializa o setpoint e ativa o controle
+        controlador->setResfriamento(false);
         controlador->inicializaControlador(valor);
         etapa=20; // Pula para as telas de execução
         tela_atualizada = false;
