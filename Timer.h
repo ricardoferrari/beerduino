@@ -48,13 +48,15 @@ public:
   }
 
   long getElapsed(){
-    unsigned long tempo_inicial_calc = 0;
-    if(pausado) {
-      tempo_inicial_calc = tempo_inicial+(millis()-tempo_pausa);
-    } else {
-      tempo_inicial_calc = tempo_inicial;
+    unsigned long tempo_calc = 0;
+    if(pausado && (iniciado || watchdog)) {
+      tempo_calc = tempo_inicial-tempo_pausa;
+    } else if (iniciado || watchdog){
+      tempo_calc = millis()-tempo_inicial;
     }
-    return (millis()-tempo_inicial_calc);
+    Serial.print("Tempo decorrido (timer): ");
+    Serial.println(tempo_calc);
+    return tempo_calc;
   }
 
   String getElapsedFormatado(){
@@ -62,7 +64,8 @@ public:
   }
 
   long getRemaining(){
-     return iniciado ? max(tempo_total-this->getElapsed(),0) : 0;
+     //return iniciado ? max(tempo_total-this->getElapsed(),0) : 0;
+     return max(tempo_total-this->getElapsed(),0);
   }
 
   String getRemainingFormatado(){
@@ -130,14 +133,15 @@ public:
   }
 
   void pausa() {
-    if (!pausado) {
+    //pausa somente se o timer estiver ativado
+    if (!pausado && (iniciado || watchdog)) {
       tempo_pausa = millis();
       pausado = true;
     }
   }
 
   void resume() {
-    if(pausado) {
+    if(pausado && (iniciado || watchdog)) {
       tempo_inicial += (millis()-tempo_pausa);
       pausado = false;
     }
@@ -149,6 +153,7 @@ public:
   
   void reseta(){
     tempo_inicial = millis();
+    tempo_pausa = tempo_inicial;
   }
 
   void setWatchDog(long _delay_pulso) {

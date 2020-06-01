@@ -12,6 +12,7 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
     
     void setup() {
       this->teclado->setup();
+      this->controlador = new OnOff(Heat, histerese, atraso);
     }
 
     void run() {
@@ -51,7 +52,7 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
       delete this->estado_atual;
       switch(nome) {
         case Manual:
-          this->estado_atual = new Manual_Estado(this, this, new OnOff(Heat, histerese, atraso));
+          this->estado_atual = new Manual_Estado(this, this, this->controlador);
           break;
         case Automatico:
           this->estado_atual = new Automatico_Estado(this, &param[0]);
@@ -75,5 +76,6 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
 
   private:
     EstadoAbstrato *estado_atual;
+    OnOff *controlador;
 
 };
