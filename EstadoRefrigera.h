@@ -104,7 +104,6 @@ class Refrigera_Estado: public EstadoAbstrato {
 
     //Restauracao de energia
     void iniciaExecucao(byte *_param) {
-      Serial.println("Inicia refri");
         //Copia valores para a instância do estado atual
         param[0] = _param[0];
         param[1] = 0;

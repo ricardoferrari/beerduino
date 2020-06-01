@@ -87,14 +87,12 @@ public:
     int horas = tempo / hora;
     int minutos = (tempo % hora) / minuto;
     int segundos = ((tempo % hora) % minuto) / segundo;
-    char buffer[16];
-    snprintf(buffer, 15, "%1dh%02dm%02ds",horas,minutos,segundos);
-    String output = "";
-    for(int i=0; i<8;i++) {
-      output += buffer[i];
-    }
-    Serial.print("FORMATADO UPDATE");
-    Serial.println(output);
+    char buffer[9];
+    snprintf(buffer, 8, "%1dh%02dm%02ds",horas,minutos,segundos);
+    String output = buffer;
+//    for(int i=0; i<8;i++) {
+//      output += buffer[i];
+//    }
     return output;
   }
 

@@ -12,12 +12,9 @@
  
 class Manual_Estado: public EstadoAbstrato {
   public:
-    Manual_Estado(AppAbstract *delegate, RecuperavelDelegate *_delegateRecuperavel, OnOffInterface *_controlador) {
+    Manual_Estado(AppAbstract *delegate, OnOffInterface *_controlador) {
       _delegate = delegate;
       controlador = _controlador;
-      
-      //Delegate esponsavel por atualizar o snapshot do estado no app
-      setDelegateRestauravel(_delegateRecuperavel);
     }
 
     //Caso receba notificacao como observer
@@ -39,8 +36,6 @@ class Manual_Estado: public EstadoAbstrato {
         }
         tempo_decorrido = assunto->getElapsedFormatado();
         tempo_restante = assunto->getRemainingFormatado();
-        Serial.print("FORMATADO UPDATE");
-        Serial.println(tempo_decorrido);
         tela_atualizada = false;
       }
     }
@@ -157,7 +152,7 @@ class Manual_Estado: public EstadoAbstrato {
                       param[2] = com_tempo;
                       this->iniciaExecucao(param);
                       //Captura o estado atual para restaurar em caso de perda de energia
-                      this->takeSnapshot(Manual, param);
+                      //this->takeSnapshot(Manual, param);
             break;
             }
             default:
@@ -203,7 +198,7 @@ class Manual_Estado: public EstadoAbstrato {
     }
 
     void initFromSnapshot(byte *_param) {
-      iniciaExecucao(_param);
+      //iniciaExecucao(_param);
     }
     
   private:

@@ -52,10 +52,10 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
       delete this->estado_atual;
       switch(nome) {
         case Manual:
-          this->estado_atual = new Manual_Estado(this, this, this->controlador);
+          this->estado_atual = new Manual_Estado(this, this->controlador);
           break;
         case Automatico:
-          this->estado_atual = new Automatico_Estado(this, &param[0]);
+          this->estado_atual = new Automatico_Estado(this, &param[0], this->controlador);
           break;
         case ConfiguraFervura:
           this->estado_atual = new ConfiguraFervura_Estado(this, &param[0]);

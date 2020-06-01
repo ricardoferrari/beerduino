@@ -17,6 +17,7 @@ class Fervura_Estado: public EstadoAbstrato {
       tela_atualizada = false;
     }
 
+
     //Restauracao de energia
     void initFromSnapshot(byte *_param) {}
 
@@ -45,8 +46,6 @@ class Fervura_Estado: public EstadoAbstrato {
         }
         tempo_decorrido = timer->getElapsedFormatado();
         tempo_restante = timer->getRemainingFormatado();
-        Serial.print("FORMATADO UPDATE");
-        Serial.println(tempo_decorrido);
         tela_atualizada = false;
       } else if (timer->getAlarme()->temAlarme()){
         tempo_decorrido = timer->getElapsedFormatado();

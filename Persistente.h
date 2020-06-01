@@ -53,22 +53,12 @@ class Persistente: public PersistenteObserver {
     void triggerRestoration() {
       if (this->isSecured()) {
         this->recupera();
-        Serial.print("Etapa: ");
-        Serial.println(this->etapa);
-        Serial.print("P0: ");
-        Serial.println(this->param[0]);
         this->delegate->restoreState(this->etapa, &this->param[0]);
       }      
     }
 
     //Notificação para salvar estado atual
     void notify(Nome_estados estado, byte *_param) {
-      Serial.print("Param(salva): ");
-      Serial.print(_param[0]);
-      Serial.print(" - ");
-      Serial.print(_param[1]);
-      Serial.print(" - ");
-      Serial.print(_param[2]);
       if (estado == 0) {//Caso esteja no menu Principal
         unsetRecovery();
       } else {
@@ -106,13 +96,13 @@ class Persistente: public PersistenteObserver {
       if (EEPROM.length() > 44) { //tamanho da gravacao
         byte etapa_temp = EEPROM.read(41);
         switch(etapa_temp) {
-          case 0 : this->etapa = Principal; break;
-          case 1 : this->etapa = Manual; break;
-          case 2 : this->etapa = Automatico; break;
-          case 3 : this->etapa = Fervura; break;
-          case 4 : this->etapa = ConfiguraFervura; break;
+//          case 0 : this->etapa = Principal; break;
+//          case 1 : this->etapa = Manual; break;
+//          case 2 : this->etapa = Automatico; break;
+//          case 3 : this->etapa = Fervura; break;
+//          case 4 : this->etapa = ConfiguraFervura; break;
           case 5 : this->etapa = Refrigeracao; break;
-          case 6 : this->etapa = Configuracao; break;
+//          case 6 : this->etapa = Configuracao; break;
           default: this->etapa = Principal; break;
         }
         this->param[0] = EEPROM.read(42); // tempo

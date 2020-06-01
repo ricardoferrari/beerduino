@@ -1,11 +1,12 @@
 // Estado concreto do modo automatico
 class Automatico_Estado: public EstadoAbstrato {
   public:
-    Automatico_Estado(AppAbstract *delegate, byte *_param) {
+    Automatico_Estado(AppAbstract *delegate, byte *_param, OnOffInterface *_controlador) {
       param = &_param[0];
       recupera();
       etapa = (param[0]==0)?200:0;
       _delegate = delegate;
+      controlador = _controlador;
     }
 
     //Restauracao de energia
