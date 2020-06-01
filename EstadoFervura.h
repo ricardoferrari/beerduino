@@ -8,6 +8,7 @@ class Fervura_Estado: public EstadoAbstrato {
       //param[0] = tempo de fervura
       //param[1] = qtd lupulos
       if (param[1]>0) _delegate->timer->alarme->habilitaAlarme();
+      _delegate->timer->reseta();
       _delegate->timer->setMinutoTotal(param[0]); 
       _delegate->timer->start();
       this->controlador->inicializaControlador(valorPWM);
@@ -44,6 +45,8 @@ class Fervura_Estado: public EstadoAbstrato {
         }
         tempo_decorrido = timer->getElapsedFormatado();
         tempo_restante = timer->getRemainingFormatado();
+        Serial.print("FORMATADO UPDATE");
+        Serial.println(tempo_decorrido);
         tela_atualizada = false;
       } else if (timer->getAlarme()->temAlarme()){
         tempo_decorrido = timer->getElapsedFormatado();
@@ -114,6 +117,7 @@ class Fervura_Estado: public EstadoAbstrato {
           valorPWM+=qtd;
           valorPWM = (valorPWM > valorMax) ? valorMax : valorPWM;
           this->controlador->setDuty(valorPWM);
+          tela_exec = 0; // Zera o contador de loop de tela
           tela_atualizada = false;
       }
     }
@@ -123,6 +127,7 @@ class Fervura_Estado: public EstadoAbstrato {
           valorPWM-=qtd;
           valorPWM = (valorPWM < 0) ? 0 : valorPWM;
           this->controlador->setDuty(valorPWM);
+          tela_exec = 0; // Zera o contador de loop de tela
           tela_atualizada = false;
       }
     }

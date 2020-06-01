@@ -87,11 +87,15 @@ public:
     int horas = tempo / hora;
     int minutos = (tempo % hora) / minuto;
     int segundos = ((tempo % hora) % minuto) / segundo;
-    
-    char buffer[50];
-    sprintf(buffer, "%dh%dm%ds",horas,minutos,segundos);
-
-    return buffer;
+    char buffer[16];
+    snprintf(buffer, 15, "%1dh%02dm%02ds",horas,minutos,segundos);
+    String output = "";
+    for(int i=0; i<8;i++) {
+      output += buffer[i];
+    }
+    Serial.print("FORMATADO UPDATE");
+    Serial.println(output);
+    return output;
   }
 
   void run() {
@@ -117,7 +121,6 @@ public:
     this->reseta();
     this->setWatchDog(1);
     iniciado = true;
-    concluido = false;
   }
 
   void setMinutoTotal(int n){
@@ -150,6 +153,8 @@ public:
   }
   
   void reseta(){
+    concluido = false;
+    pausado = false;
     tempo_inicial = millis();
     tempo_pausa = tempo_inicial;
   }

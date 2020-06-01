@@ -39,6 +39,8 @@ class Manual_Estado: public EstadoAbstrato {
         }
         tempo_decorrido = assunto->getElapsedFormatado();
         tempo_restante = assunto->getRemainingFormatado();
+        Serial.print("FORMATADO UPDATE");
+        Serial.println(tempo_decorrido);
         tela_atualizada = false;
       }
     }

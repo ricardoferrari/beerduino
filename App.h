@@ -41,7 +41,7 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
     /*********** Funcao de recuperacao **********************************/
     void restoreState(Nome_estados estado, byte *param) {
       this->gotoEstado(estado);
-      //this->estado_atual->initFromSnapshot(param);
+      this->estado_atual->initFromSnapshot(param);
     }
 
 
@@ -63,9 +63,9 @@ class App: public AppAbstract, public TecladoDelegate, public RecuperavelDelegat
         case Fervura:
           this->estado_atual = new Fervura_Estado(this, &param[0], new PWM(Heat, frequencia));
           break;
-//        case Refrigeracao:
-//          this->estado_atual = new Refrigera_Estado(this, this, this->controlador);
-//          break;
+        case Refrigeracao:
+          this->estado_atual = new Refrigera_Estado(this, this, this->controlador);
+          break;
         case Configuracao:
           this->estado_atual = new Configuracao_Estado(this, &param[0]);
           break;
