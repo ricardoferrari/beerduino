@@ -88,11 +88,11 @@ public:
     int minutos = (tempo % hora) / minuto;
     int segundos = ((tempo % hora) % minuto) / segundo;
     char buffer[9];
-    snprintf(buffer, 8, "%1dh%02dm%02ds",horas,minutos,segundos);
-    String output = buffer;
-//    for(int i=0; i<8;i++) {
-//      output += buffer[i];
-//    }
+    int size = snprintf(buffer, 8, "%1dh%02dm%02ds",horas,minutos,segundos);
+    String output = "";
+    for(int i=0; i<(size-1);i++) {
+      output += buffer[i];
+    }
     return output;
   }
 

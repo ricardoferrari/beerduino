@@ -2,7 +2,7 @@
 class Automatico_Estado: public EstadoAbstrato {
   public:
     Automatico_Estado(AppAbstract *delegate, byte *_param, OnOffInterface *_controlador) {
-      param = &_param[0];
+      param = _param;
       recupera();
       etapa = (param[0]==0)?200:0;
       _delegate = delegate;
@@ -229,6 +229,7 @@ class Automatico_Estado: public EstadoAbstrato {
     String tempo_pausado;
     AppAbstract *_delegate;
     bool tela_atualizada = false;
+    OnOffInterface *controlador;
 };
 
 
@@ -384,6 +385,6 @@ class Configuracao_Estado: public EstadoAbstrato {
     byte valorMax = 5; //qtd máxima inicial de rampas
     byte valor = 0;
     byte *param; //Num maximo de pontos da rampa
-        AppAbstract *_delegate;
+    AppAbstract *_delegate;
     bool tela_atualizada = false;
 };
