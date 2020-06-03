@@ -6,6 +6,7 @@ class OnOffInterface {
     virtual void inicializaControlador(byte _setpoint);
     virtual void finalizaControlador();
     virtual double getPV();
+//    virtual String getPVFormatado();
     virtual void setSetPoint(byte _setpoint);
     virtual void setResfriamento(boolean yes);
     virtual void run();
@@ -58,6 +59,17 @@ public:
     double getPV() {
       return temperatura;
     }
+
+//    String getPVFormatado() {
+//      char buffer[3];
+//      int size = snprintf(buffer, 2, "%02d",floor(temperatura));
+//      String output = "";
+//      for(int i=0; i<(size-1);i++) {
+//        output += buffer[i];
+//      }
+//      return output;
+//    }
+
     /************************************************************/
 
 

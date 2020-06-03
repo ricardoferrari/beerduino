@@ -47,6 +47,14 @@ public:
     return concluido;
   }
 
+  int getPercentualCompleto() {
+    //Reduces the number to avoid operations that overflows the variable limits
+    float elapsed_s = (this->getElapsed()/segundo);
+    float total_s = (tempo_total/segundo);
+    float percentual = (elapsed_s / total_s) * 100;
+    return floor(percentual);
+  }
+
   long getElapsed(){
     unsigned long tempo_calc = 0;
     if(pausado && (iniciado || watchdog)) {
@@ -84,13 +92,13 @@ public:
 
 
   String formataTempo(long tempo){
-    int horas = tempo / hora;
-    int minutos = (tempo % hora) / minuto;
-    int segundos = ((tempo % hora) % minuto) / segundo;
-    char buffer[9];
-    int size = snprintf(buffer, 8, "%1dh%02dm%02ds",horas,minutos,segundos);
+    int horas = max(tempo / hora, 0);
+    int minutos = max((tempo % hora) / minuto, 0);
+    int segundos = max(((tempo % hora) % minuto) / segundo, 0);
+    char buffer[10];
+    int size = snprintf(buffer, 9, "%1dh%02dm%02ds",horas,minutos,segundos);
     String output = "";
-    for(int i=0; i<(size-1);i++) {
+    for(int i=0; i<(size);i++) {
       output += buffer[i];
     }
     return output;

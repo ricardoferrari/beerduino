@@ -39,6 +39,9 @@ class Automatico_Estado: public EstadoAbstrato {
         }
         tempo_decorrido = assunto->getElapsedFormatado();
         tempo_restante = assunto->getRemainingFormatado();
+        //Atualiza a temperatura de acordo com o tempo na rampa ou patamar
+        this->temperatura_atual = this->calculaTemperaturaAtual(assunto->getPercentualCompleto(), param[rampa], param[rampa+2]);
+        this->controlador->setSetPoint(temperatura_atual);
         tela_atualizada = false;
       }
 
@@ -48,8 +51,22 @@ class Automatico_Estado: public EstadoAbstrato {
       }
 
     }
+
+    int calculaTemperaturaAtual(int percentual, byte temperatura1, byte temperatura2) {
+      return floor( (temperatura1*(100-percentual)+temperatura2*(percentual))/100 );
+    }
     
     void run() {
+      //Executa a ação do controlador
+      this->controlador->run();
+
+      //Checa se o tempo deve ser contabilizado (temperatura com limiar de erro menor do que 5 celsius)
+      if (this->controlador->mashRangeOK(5)) {
+        _delegate->timer->resume();
+      } else {
+        _delegate->timer->pausa();
+      }
+      
       if (!tela_atualizada) {
           lcd.clear();
 
@@ -63,17 +80,14 @@ class Automatico_Estado: public EstadoAbstrato {
             case 10:
               lcd.setCursor(0,0);
               lcd.print("Rampa: ");
-              lcd.setCursor(9,0);
+              lcd.setCursor(8,0);
               lcd.print(    int( floor(rampa/2) + 1 )    );
               lcd.print("/");
               lcd.print(    int( param[0] )    );
+              lcd.setCursor(13,0);
+              lcd.print((controlador->estadoControlador())?"OFF":"ON");
               lcd.setCursor(0,1);
-              lcd.print("T:");
-              lcd.setCursor(3,1);
-              lcd.print(param[rampa]);
-              lcd.print(" T:");
-              lcd.setCursor(9,1);
-              lcd.print(param[rampa+1]);
+              lcd.print(linha(controlador->getPV(), this->temperatura_atual, param[rampa+1]));
               break;
             case 11:
               lcd.setCursor(0,0);
@@ -141,11 +155,14 @@ class Automatico_Estado: public EstadoAbstrato {
               case 0:
                 _delegate->timer->setMinutoTotal(param[rampa+1]);
                 _delegate->timer->start();
+                temperatura_atual = param[1];
+                //Inicializa o setpoint e ativa o controle
+                controlador->setResfriamento(false);
+                controlador->inicializaControlador(temperatura_atual);
                 executando = true;
                 etapa=10;
                 tela_atualizada = false;
                 break;
-
                 
               // Alterna telas
               case 10 ... 12:
@@ -201,6 +218,8 @@ class Automatico_Estado: public EstadoAbstrato {
         etapa = 10;
         tela_atualizada = false;
       } else if (etapa == 103) { // Confirma saida
+        //Finaliza o controlador
+        controlador->finalizaControlador();
         _delegate->gotoEstado(Principal);
       } else if (etapa == 200) { // Saida por ausencia de programa
         _delegate->gotoEstado(Principal);
@@ -216,8 +235,21 @@ class Automatico_Estado: public EstadoAbstrato {
         param[i] = EEPROM.read(i);
       }
     }
+
+    //Formata a linha para ser mostrada na tela
+    String linha(byte _PV, byte _SP, byte _tempo) {
+      char buffer[16];
+      int size = snprintf(buffer, 15, "SP%02d PV%02d T%03d", _SP, _PV, _tempo);
+      String output = "";
+      for(int i=0; i<(size);i++) {
+        output += buffer[i];
+      }
+      Serial.println(size);
+      return output;
+    }
     
   private:
+
     byte etapa = 0;
     byte rampaMax = 10;
     byte rampa = 1;
@@ -227,6 +259,7 @@ class Automatico_Estado: public EstadoAbstrato {
     String tempo_decorrido;
     String tempo_restante;
     String tempo_pausado;
+    byte temperatura_atual = 0;
     AppAbstract *_delegate;
     bool tela_atualizada = false;
     OnOffInterface *controlador;

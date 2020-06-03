@@ -7,6 +7,7 @@ class TimerInterface {
     virtual String getRemainingFormatado();
     virtual String getPausadoFormatado();
     virtual Alarme *getAlarme();
+    virtual int getPercentualCompleto();
 };
 
 
