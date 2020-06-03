@@ -6,7 +6,6 @@ class OnOffInterface {
     virtual void inicializaControlador(byte _setpoint);
     virtual void finalizaControlador();
     virtual double getPV();
-//    virtual String getPVFormatado();
     virtual void setSetPoint(byte _setpoint);
     virtual void setResfriamento(boolean yes);
     virtual void run();
@@ -45,6 +44,7 @@ public:
     void inicializaControlador(byte _setpoint) {
       this->proxima_execucao = millis() + this->atraso;
       this->setSetPoint(_setpoint);
+      this->inicializaMedias(_setpoint); // carrega os valores iniciais da media
       this->ativa();
     }
 
@@ -82,7 +82,8 @@ public:
   }
   
   void adicionaAmostra(double _temperatura){
-    temperatura = _temperatura;
+    this->setMedias(_temperatura);
+    temperatura = this->getMedia();
   }
 
   void setSetPoint(byte _setpoint){
@@ -118,6 +119,29 @@ public:
     return liga;
   }
 
+  void inicializaMedias(float temperatura) {
+    for(int i=0; i<this->media_qtd; i++) {
+      medias[i] = temperatura;
+    }
+  }
+
+  void setMedias(float temperatura) {
+    for(int i=1; i<this->media_qtd; i++) {
+      medias[i] = medias[i-1];
+    }
+    medias[0] = temperatura;
+    medias[0] = this->getMedia();
+  }
+
+  //Retorna o valor da temperatura baseado nas media das ultimas medições
+  float getMedia() {
+    float media = 0;
+    for(int i=0; i<this->media_qtd; i++) {
+      media += medias[i];
+    }
+    return media / this->media_qtd;
+  }
+
   void run(){
     // Atribui o valor de controle a saída relê
     //Primeiro processa o estado em relação ao setpoint
@@ -130,7 +154,9 @@ public:
   }
 
   private:
+    static const byte media_qtd = 3;
     boolean acao_direta = true; //Define o modo de operação como direto ou inverso
     double temperatura = 0;
     double temperatura_offset = 0;
+    float medias[media_qtd];
 };

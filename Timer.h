@@ -144,16 +144,10 @@ public:
 
   void pausa() {
     //pausa somente se o timer estiver ativado
-    Serial.println("Antes");
-    Serial.println(pausado);
-    Serial.println(iniciado);
     if (!pausado && (iniciado || watchdog)) {
       tempo_pausa = millis();
       pausado = true;
     }
-    Serial.println("Depois");
-    Serial.println(pausado);
-    Serial.println(iniciado);
   }
 
   void resume() {
