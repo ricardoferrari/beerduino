@@ -61,10 +61,12 @@ class Automatico_Estado: public EstadoAbstrato {
       this->controlador->run();
 
       //Checa se o tempo deve ser contabilizado (temperatura com limiar de erro menor do que 5 celsius)
-      if (this->controlador->mashRangeOK(5)) {
-        _delegate->timer->resume();
-      } else {
-        _delegate->timer->pausa();
+      if ( (etapa >= 10) && (etapa <= 12) ) { //Caso esteja em modo de pausa forçado não executa a checagem de tempo
+        if (this->controlador->mashRangeOK(5)) {
+          _delegate->timer->resume();
+        } else {
+          _delegate->timer->pausa();
+        }
       }
       
       if (!tela_atualizada) {
@@ -239,12 +241,11 @@ class Automatico_Estado: public EstadoAbstrato {
     //Formata a linha para ser mostrada na tela
     String linha(byte _PV, byte _SP, byte _tempo) {
       char buffer[16];
-      int size = snprintf(buffer, 15, "SP%02d PV%02d T%03d", _SP, _PV, _tempo);
+      int size = snprintf(buffer, 15, "SP%02d PV%02d T%03d ", _SP, _PV, _tempo);
       String output = "";
-      for(int i=0; i<(size);i++) {
+      for(int i=0; i<(size-1);i++) {
         output += buffer[i];
       }
-      Serial.println(size);
       return output;
     }
     

@@ -167,7 +167,7 @@ class Manual_Estado: public EstadoAbstrato {
       controlador->finalizaControlador();
       _delegate->timer->stop();
       //Cancela a captura de estado para reinício após falha elétrica
-      this->unsetSnapshot();
+      //this->unsetSnapshot();
       _delegate->gotoEstado(Principal);
     }
 

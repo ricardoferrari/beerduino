@@ -83,6 +83,9 @@ public:
   }
 
   long getPausado(){
+    Serial.println("getPausado");
+    Serial.println(pausado);
+    Serial.println(iniciado);
      return pausado ?(millis()-tempo_pausa) : 0;
   }
 
@@ -98,7 +101,7 @@ public:
     char buffer[10];
     int size = snprintf(buffer, 9, "%1dh%02dm%02ds",horas,minutos,segundos);
     String output = "";
-    for(int i=0; i<(size);i++) {
+    for(int i=0; i<(size-1);i++) {
       output += buffer[i];
     }
     return output;
@@ -141,10 +144,16 @@ public:
 
   void pausa() {
     //pausa somente se o timer estiver ativado
+    Serial.println("Antes");
+    Serial.println(pausado);
+    Serial.println(iniciado);
     if (!pausado && (iniciado || watchdog)) {
       tempo_pausa = millis();
       pausado = true;
     }
+    Serial.println("Depois");
+    Serial.println(pausado);
+    Serial.println(iniciado);
   }
 
   void resume() {
