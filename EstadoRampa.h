@@ -42,6 +42,8 @@ class Automatico_Estado: public EstadoAbstrato {
         strcpy(tempo_decorrido, assunto->getElapsedFormatado());
         strcpy(tempo_restante, assunto->getRemainingFormatado());
         //Atualiza a temperatura de acordo com o tempo na rampa ou patamar
+        Serial.print("assunto->getPercentualCompleto()");
+        Serial.println(assunto->getPercentualCompleto());
         this->temperatura_atual = this->calculaTemperaturaAtual(assunto->getPercentualCompleto(), param[rampa], param[rampa+2]);
         this->controlador->setSetPoint(temperatura_atual);
         tela_atualizada = false;
@@ -67,8 +69,10 @@ class Automatico_Estado: public EstadoAbstrato {
       if ( (etapa >= 10) && (etapa <= 12) ) { //Caso esteja em modo de pausa forçado não executa a checagem de tempo
         if (this->controlador->mashRangeOK(5)) {
           _delegate->timer->resume();
+          Serial.println("Resume");
         } else {
           _delegate->timer->pausa();
+          Serial.println("Pausa");
         }
       }
       

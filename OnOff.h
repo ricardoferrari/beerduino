@@ -38,7 +38,8 @@ public:
     }
 
     boolean mashRangeOK(byte limiar) {
-      return (abs(getError()) < limiar);
+//      return (abs(getError()) < limiar);
+      return (abs(getError()) < limiar) || (getError() > 0);
     }
     
     void inicializaControlador(byte _setpoint) {

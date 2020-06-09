@@ -58,7 +58,7 @@ public:
   long getElapsed(){
     unsigned long tempo_calc = 0;
     if(pausado && (iniciado || watchdog)) {
-      tempo_calc = tempo_inicial-tempo_pausa;
+      tempo_calc = tempo_pausa-tempo_inicial;
     } else if (iniciado || watchdog){
       tempo_calc = millis()-tempo_inicial;
     }
@@ -83,9 +83,6 @@ public:
   }
 
   long getPausado(){
-    Serial.println("getPausado");
-    Serial.println(pausado);
-    Serial.println(iniciado);
      return pausado ?(millis()-tempo_pausa) : 0;
   }
 
