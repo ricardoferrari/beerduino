@@ -65,7 +65,7 @@ public:
     return tempo_calc;
   }
 
-  String getElapsedFormatado(){
+  char* getElapsedFormatado(){
     return this->formataTempo(this->getElapsed());
   }
 
@@ -74,11 +74,11 @@ public:
      return max(tempo_total-this->getElapsed(),0);
   }
 
-  String getRemainingFormatado(){
+  char* getRemainingFormatado(){
     return this->formataTempo(this->getRemaining());
   }
 
-  String getTempoTotal(){
+  char* getTempoTotal(){
     return this->formataTempo(tempo_total);
   }
 
@@ -89,22 +89,23 @@ public:
      return pausado ?(millis()-tempo_pausa) : 0;
   }
 
-  String getPausadoFormatado(){
+  char *getPausadoFormatado(){
     return this->formataTempo(this->getPausado());
   }
 
 
-  String formataTempo(long tempo){
+  char* formataTempo(long tempo){
     int horas = max(tempo / hora, 0);
     int minutos = max((tempo % hora) / minuto, 0);
     int segundos = max(((tempo % hora) % minuto) / segundo, 0);
-    char buffer[10];
-    int size = snprintf(buffer, 9, "%1dh%02dm%02ds",horas,minutos,segundos);
-    String output = "";
-    for(int i=0; i<(size-1);i++) {
-      output += buffer[i];
-    }
-    return output;
+    //char buffer[12];
+    int size = snprintf(this->buffer, 9, "%1dh%02dm%02ds",horas,minutos,segundos);
+//    String output = "";
+//    for(int i=0; i<(size-1);i++) {
+//      output += buffer[i];
+//    }
+//    return output;
+    return this->buffer;
   }
 
   void run() {
@@ -190,4 +191,5 @@ public:
    bool iniciado = false;
    bool pausado = false;
    bool watchdog = false;
+   char buffer[12];
 };

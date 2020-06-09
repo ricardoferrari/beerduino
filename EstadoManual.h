@@ -34,8 +34,10 @@ class Manual_Estado: public EstadoAbstrato {
           tela_exec = 0;
           etapa = (com_tempo) ? ((etapa-20+1)%3+20) : ((etapa-20+1)%2+20); //Próxima tela
         }
-        tempo_decorrido = assunto->getElapsedFormatado();
-        tempo_restante = assunto->getRemainingFormatado();
+//        tempo_decorrido = assunto->getElapsedFormatado();
+//        tempo_restante = assunto->getRemainingFormatado();
+        strcpy(tempo_decorrido, assunto->getElapsedFormatado());
+        strcpy(tempo_restante, assunto->getRemainingFormatado());
         tela_atualizada = false;
       }
     }
@@ -209,8 +211,8 @@ class Manual_Estado: public EstadoAbstrato {
     byte valorMax = 1;
     byte valor = 0;
     byte param[3];
-    String tempo_decorrido;
-    String tempo_restante;
+    char tempo_decorrido[12];
+    char tempo_restante[12];
     bool executando = false;
     AppAbstract *_delegate;
     bool tela_atualizada = false;

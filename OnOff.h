@@ -78,6 +78,7 @@ public:
   }
 
   void desativa() {
+    digitalWrite(rele, true);
     this->executando = false;
   }
   
@@ -145,7 +146,6 @@ public:
   void run(){
     // Atribui o valor de controle a saída relê
     //Primeiro processa o estado em relação ao setpoint
-    
     this->adicionaAmostra(termopar.readCelsius()+temperatura_offset);
     
     if (this->executando) { 

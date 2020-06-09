@@ -37,8 +37,10 @@ class Automatico_Estado: public EstadoAbstrato {
           tela_exec = 0;
           etapa = (etapa-10+1)%3+10;
         }
-        tempo_decorrido = assunto->getElapsedFormatado();
-        tempo_restante = assunto->getRemainingFormatado();
+//        tempo_decorrido = assunto->getElapsedFormatado();
+//        tempo_restante = assunto->getRemainingFormatado();
+        strcpy(tempo_decorrido, assunto->getElapsedFormatado());
+        strcpy(tempo_restante, assunto->getRemainingFormatado());
         //Atualiza a temperatura de acordo com o tempo na rampa ou patamar
         this->temperatura_atual = this->calculaTemperaturaAtual(assunto->getPercentualCompleto(), param[rampa], param[rampa+2]);
         this->controlador->setSetPoint(temperatura_atual);
@@ -46,7 +48,8 @@ class Automatico_Estado: public EstadoAbstrato {
       }
 
       if(etapa == 101){
-        tempo_pausado = assunto->getPausadoFormatado();
+//        tempo_pausado = assunto->getPausadoFormatado();
+        strcpy(tempo_pausado, assunto->getPausadoFormatado());
         tela_atualizada = false;
       }
 
@@ -257,9 +260,9 @@ class Automatico_Estado: public EstadoAbstrato {
     byte *param; //Num maximo de pontos da rampa
     bool executando = false;
     byte tela_exec = 0;
-    String tempo_decorrido;
-    String tempo_restante;
-    String tempo_pausado;
+    char tempo_pausado[12];
+    char tempo_decorrido[12];
+    char tempo_restante[12];
     byte temperatura_atual = 0;
     AppAbstract *_delegate;
     bool tela_atualizada = false;

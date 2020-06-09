@@ -3,9 +3,9 @@
 class TimerInterface {
   public:
     virtual bool finalizou();
-    virtual String getElapsedFormatado();
-    virtual String getRemainingFormatado();
-    virtual String getPausadoFormatado();
+    virtual char* getElapsedFormatado();
+    virtual char* getRemainingFormatado();
+    virtual char* getPausadoFormatado();
     virtual Alarme *getAlarme();
     virtual int getPercentualCompleto();
 };

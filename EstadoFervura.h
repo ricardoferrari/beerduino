@@ -44,11 +44,14 @@ class Fervura_Estado: public EstadoAbstrato {
           tela_exec = 0;
           etapa = (etapa-20+1)%3+20;
         }
-        tempo_decorrido = timer->getElapsedFormatado();
-        tempo_restante = timer->getRemainingFormatado();
+//        tempo_decorrido = timer->getElapsedFormatado();
+//        tempo_restante = timer->getRemainingFormatado();
+        strcpy(tempo_decorrido, timer->getElapsedFormatado());
+        strcpy(tempo_restante, timer->getRemainingFormatado());
         tela_atualizada = false;
       } else if (timer->getAlarme()->temAlarme()){
-        tempo_decorrido = timer->getElapsedFormatado();
+//        tempo_decorrido = timer->getElapsedFormatado();
+        strcpy(tempo_decorrido, timer->getElapsedFormatado());
         tela_atualizada = false;
       }
 
@@ -202,8 +205,10 @@ class Fervura_Estado: public EstadoAbstrato {
     byte tela_exec = 0;
     byte valorMax = 100;
     byte valorPWM = 90;
-    String tempo_decorrido;
-    String tempo_restante;
+//    char* tempo_decorrido;
+//    char* tempo_restante;
+    char tempo_decorrido[12];
+    char tempo_restante[12];
     Alarme alarme;
     bool executando = false;
     byte *param; //Num maximo de pontos da rampa
