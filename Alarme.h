@@ -1,6 +1,8 @@
 class Alarme {
   public:
       Alarme () {
+        pinMode(Buzz, OUTPUT);
+        digitalWrite(Buzz, LOW);
       }
 
       void addAlarme(byte tempo, String msg) {
@@ -42,17 +44,27 @@ class Alarme {
         else alarme_ativo = false;
         
         alarme_disparado = false;
+        desligaBuzzer();
       }
 
       bool checaAlarme(byte pv) {
         if (alarme_ativo && (pv >= alarmes[alarme_atual]) && !alarme_disparado) {
             alarme_disparado = true;
+            ligaBuzzer();
             return true;
         } else return false;
       }
       
       bool temAlarme() {
         return alarme_disparado;
+      }
+
+      void ligaBuzzer() {
+        digitalWrite(Buzz, HIGH);
+      }
+
+      void desligaBuzzer() {
+        digitalWrite(Buzz, LOW);
       }
       
       

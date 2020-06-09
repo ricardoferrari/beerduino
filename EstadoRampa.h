@@ -16,6 +16,9 @@ class Automatico_Estado: public EstadoAbstrato {
       if (assunto->finalizou()) {     // Timer finalizado
         rampa+=2;
         if (rampa>param[0]*2) {
+          //Ativa o buzzer ao finalizar
+          this->alarme = assunto->getAlarme();
+          this->alarme->ligaBuzzer();
           etapa = 103;
           executando = false;
         } else {                    // Continua executando a proxima rampa
@@ -37,8 +40,6 @@ class Automatico_Estado: public EstadoAbstrato {
           tela_exec = 0;
           etapa = (etapa-10+1)%3+10;
         }
-//        tempo_decorrido = assunto->getElapsedFormatado();
-//        tempo_restante = assunto->getRemainingFormatado();
         strcpy(tempo_decorrido, assunto->getElapsedFormatado());
         strcpy(tempo_restante, assunto->getRemainingFormatado());
         //Atualiza a temperatura de acordo com o tempo na rampa ou patamar
@@ -227,6 +228,8 @@ class Automatico_Estado: public EstadoAbstrato {
         etapa = 10;
         tela_atualizada = false;
       } else if (etapa == 103) { // Confirma saida
+        //Desliga o buzzer
+        this->alarme->desligaBuzzer();
         //Finaliza o controlador
         controlador->finalizaControlador();
         _delegate->gotoEstado(Principal);
@@ -246,14 +249,9 @@ class Automatico_Estado: public EstadoAbstrato {
     }
 
     //Formata a linha para ser mostrada na tela
-    String linha(byte _PV, byte _SP, byte _tempo) {
-      char buffer[16];
-      int size = snprintf(buffer, 15, "SP%02d PV%02d T%03d ", _SP, _PV, _tempo);
-      String output = "";
-      for(int i=0; i<(size-1);i++) {
-        output += buffer[i];
-      }
-      return output;
+    char* linha(byte _PV, byte _SP, byte _tempo) {
+      snprintf(this->buffer, 15, "SP%02d PV%02d T%03d ", _SP, _PV, _tempo);
+      return this->buffer;
     }
     
   private:
@@ -271,6 +269,8 @@ class Automatico_Estado: public EstadoAbstrato {
     AppAbstract *_delegate;
     bool tela_atualizada = false;
     OnOffInterface *controlador;
+    char buffer[16];
+    Alarme *alarme;
 };
 
 

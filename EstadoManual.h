@@ -20,6 +20,10 @@ class Manual_Estado: public EstadoAbstrato {
     //Caso receba notificacao como observer
     void update(TimerInterface *assunto) {
       if (assunto->finalizou()) {     // Timer finalizado
+        //Liga o buzzer
+        //Ativa o buzzer ao finalizar
+        this->alarme = assunto->getAlarme();
+        this->alarme->ligaBuzzer();
         tela_atualizada = false;
         etapa = 100;
       }
@@ -172,6 +176,8 @@ class Manual_Estado: public EstadoAbstrato {
     }
 
     void cancel() {
+      //Desliga o buzzer
+      if (this->alarme)this->alarme->desligaBuzzer();
       controlador->finalizaControlador();
       _delegate->timer->stop();
       //Cancela a captura de estado para reinício após falha elétrica
@@ -223,5 +229,6 @@ class Manual_Estado: public EstadoAbstrato {
     AppAbstract *_delegate;
     bool tela_atualizada = false;
     OnOffInterface *controlador;
+    Alarme *alarme;
 };
 

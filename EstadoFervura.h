@@ -24,6 +24,9 @@ class Fervura_Estado: public EstadoAbstrato {
     //Caso receba notificacao como observer
     void update(TimerInterface *timer) {
       if (timer->finalizou()) {     // Timer finalizado
+        //Ativa o buzzer ao finalizar
+        this->alarme = timer->getAlarme();
+        this->alarme->ligaBuzzer();
         tela_atualizada = false;
         etapa = 201;
         this->controlador->finalizaControlador();
@@ -153,6 +156,8 @@ class Fervura_Estado: public EstadoAbstrato {
                 tela_atualizada = false;
                 this->controlador->finalizaControlador();
                 _delegate->timer->stop();
+                //Desliga o buzzer
+                this->alarme->desligaBuzzer();
                 break;
             /**********************************************************/
             /***************** Finaliza o processo ********************/
@@ -211,7 +216,7 @@ class Fervura_Estado: public EstadoAbstrato {
 //    char* tempo_restante;
     char tempo_decorrido[12];
     char tempo_restante[12];
-    Alarme alarme;
+    Alarme *alarme;
     bool executando = false;
     byte *param; //Num maximo de pontos da rampa
     PWMInterface *controlador;

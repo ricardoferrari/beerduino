@@ -44,6 +44,7 @@ void setup() {
   Serial.begin(9600);
   lcd.begin(16,2);
   lcd.backlight();
+  delay(500);
   //Adiciona o observer para captura do estado de persistencia
   app.attach(&persistente);
   app.setup();
