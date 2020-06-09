@@ -115,21 +115,23 @@ class Fervura_Estado: public EstadoAbstrato {
     }
 
     void adiciona(int qtd) {
-      if (valorPWM < valorMax) {
+      if ((valorPWM < valorMax) && (etapa>=20 && etapa<=22)) { //Evita mudar de tela quando estiver reconhecendo alarme
           valorPWM+=qtd;
           valorPWM = (valorPWM > valorMax) ? valorMax : valorPWM;
           this->controlador->setDuty(valorPWM);
           tela_exec = 0; // Zera o contador de loop de tela
+          etapa = 20;
           tela_atualizada = false;
       }
     }
 
     void subtrai(int qtd) {
-      if (valorPWM > 0) {
+      if ((valorPWM > 0) && (etapa>=20 && etapa<=22)) { //Evita mudar de tela quando estiver reconhecendo alarme
           valorPWM-=qtd;
           valorPWM = (valorPWM < 0) ? 0 : valorPWM;
           this->controlador->setDuty(valorPWM);
           tela_exec = 0; // Zera o contador de loop de tela
+          etapa = 20; // vai para a tela com o valor do PWM
           tela_atualizada = false;
       }
     }

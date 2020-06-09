@@ -115,18 +115,24 @@ class Manual_Estado: public EstadoAbstrato {
     void adiciona(int qtd) {
       if ((valor+qtd) <= valorMax) {
           valor+=qtd;
-          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; controlador->setSetPoint(valor); }//Modifica a temperatura durante o processo
+          if ((etapa>=20) && (etapa<=22)) { //Modifica a temperatura durante o processo
+            param[1] = valor; controlador->setSetPoint(valor); 
+            etapa = 20;
+            tela_exec = 0;
+          }
           tela_atualizada = false;
-          tela_exec = 0;
       }
     }
 
     void subtrai(int qtd) {
       if ((valor-qtd) >= 0) {
           valor-=qtd;
-          if ((etapa>=20) && (etapa<=22)) { param[1] = valor; controlador->setSetPoint(valor); } //Modifica a temperatura durante o processo
+          if ((etapa>=20) && (etapa<=22)) { //Modifica a temperatura durante o processo
+            param[1] = valor; controlador->setSetPoint(valor); 
+            etapa = 20;
+            tela_exec = 0;
+          }
           tela_atualizada = false;
-          tela_exec = 0;
       }
     }
 
