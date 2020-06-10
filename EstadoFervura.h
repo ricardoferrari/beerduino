@@ -156,12 +156,11 @@ class Fervura_Estado: public EstadoAbstrato {
                 tela_atualizada = false;
                 this->controlador->finalizaControlador();
                 _delegate->timer->stop();
-                //Desliga o buzzer
-                this->alarme->desligaBuzzer();
                 break;
             /**********************************************************/
             /***************** Finaliza o processo ********************/
             case 201:
+               this->alarme->desligaBuzzer();
                 _delegate->gotoEstado(Principal);
                 break;
             /***********************************************************/
@@ -193,6 +192,7 @@ class Fervura_Estado: public EstadoAbstrato {
             /***********************************************************/
             /****************** Sai do processo     ********************/
             case 201:
+                this->alarme->desligaBuzzer();
                 _delegate->gotoEstado(Principal);
                 break;
             /***********************************************************/
